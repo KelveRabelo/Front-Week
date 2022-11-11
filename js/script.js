@@ -1,25 +1,63 @@
-const menu = document.querySelector("#menu")
-const close = document.querySelector("#close-menu")
-console.log(menu)
+// Seleção de elementos
+const menuBtn = document.querySelector("#menu");
+const closeMenuBtn = document.querySelector("#close-menu");
+const menu = document.querySelector("#mobile-navbar");
 
+const desktopLinks = document.querySelectorAll("#navbar a");
+const mobileLinks = document.querySelectorAll("#mobile-navbar a");
+const allLinks = [...desktopLinks, ...mobileLinks];
 
-const x = 10; //number
-console.log(typeof x);
+const slides = document.querySelectorAll(".banner");
+const dots = document.querySelectorAll(".dot");
+let slideIndex = 0;
 
-const lista = [1, 2, 3]; //object array
-console.log(typeof lista);
+// Funções
+function smoothScroll(e) {
+  e.preventDefault();
 
-const objeto = {name: "Kelve", age: 27}; //object
-console.log(typeof objeto);
+  const href = this.getAttribute("href");
+  const offsetTop = document.querySelector(href).offsetTop;
 
-const y = true //boolean
-console.log(typeof y);
+  scroll({
+    top: offsetTop,
+    behavior: "smooth",
+  });
 
-//Estrtura de Condição
-if( 2 > 4) {
-    console.log("2 é maior que 1")
-}else{
-    console.log("É menor")
+  setTimeout(() => {
+    if (menu.classList.contains("menu-active")) {
+      menu.classList.remove("menu-active");
+    }
+  }, 500);
 }
 
-//Estrutura de Repetição
+function showSlides() {
+  for (let i = 0; i < slides.length; i++) {
+    slides[i].classList.remove("active");
+    dots[i].classList.remove("active");
+  }
+
+  slideIndex++;
+
+  if (slideIndex > slides.length) {
+    slideIndex = 1;
+  }
+
+  slides[slideIndex - 1].classList.add("active");
+  dots[slideIndex - 1].classList.add("active");
+
+  setTimeout(showSlides, 3000);
+}
+
+// Eventos
+[menuBtn, closeMenuBtn].forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    menu.classList.toggle("menu-active");
+  });
+});
+
+allLinks.forEach((link) => {
+  link.addEventListener("click", smoothScroll);
+});
+
+// Inicialização
+showSlides();
